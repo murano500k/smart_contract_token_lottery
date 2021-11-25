@@ -41,7 +41,7 @@ contract ArtemLottery is VRFConsumerBase, Ownable {
     }
 
     function enter() public payable {
-        // $50 minimum
+        // $10 minimum
         require(lottery_state == LOTTERY_STATE.OPEN);
         require(msg.value >= getEntranceFee(), "Not enough ETH!");
         players.push(payable(msg.sender));
@@ -55,6 +55,20 @@ contract ArtemLottery is VRFConsumerBase, Ownable {
         // 50 * 100000 / 2000
         uint256 costToEnter = (usdEntryFee * 10**18) / adjustedPrice;
         return costToEnter;
+    }
+
+    /**
+     * Returns the latest price
+     */
+    function getLatestPrice() public view returns (int256) {
+        (
+            uint80 roundID,
+            int256 price,
+            uint256 startedAt,
+            uint256 timeStamp,
+            uint80 answeredInRound
+        ) = ethUsdPriceFeed.latestRoundData();
+        return price;
     }
 
     function startLottery() public onlyOwner {

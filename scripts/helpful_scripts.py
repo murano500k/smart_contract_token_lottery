@@ -24,8 +24,8 @@ contract_to_mock = {
     "oracle": MockOracle,
 }
 
-DECIMALS = 18
-INITIAL_VALUE = Web3.toWei(2000, "ether")
+DECIMALS = 8
+INITIAL_VALUE = 400000000000
 
 
 def get_account(index=None, id=None):
