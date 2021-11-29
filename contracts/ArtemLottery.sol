@@ -21,6 +21,12 @@ contract ArtemLottery is VRFConsumerBase, Ownable {
     bytes32 public keyhash;
     event RequestedRandomness(bytes32 requestId);
 
+    event LotteryEnded(
+        bytes32 indexed requestId,
+        address recentWinner,
+        uint256 randomNumber
+    );
+
     // 0
     // 1
     // 2
@@ -106,6 +112,7 @@ contract ArtemLottery is VRFConsumerBase, Ownable {
         require(_randomness > 0, "random-not-found");
         uint256 indexOfWinner = _randomness % players.length;
         recentWinner = players[indexOfWinner];
+        emit LotteryEnded(_requestId, recentWinner, randomness);
         recentWinner.transfer(address(this).balance);
         // Reset
         players = new address payable[](0);
