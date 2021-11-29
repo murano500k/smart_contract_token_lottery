@@ -8,7 +8,6 @@ from scripts.helpful_scripts import (
 )
 from brownie import ArtemLottery, network, config
 import time
-import asyncio
 from web3 import Web3
 
 
