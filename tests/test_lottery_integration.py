@@ -23,3 +23,10 @@ def test_can_pick_winner():
     time.sleep(200)
     assert lottery.recentWinner() == account
     assert lottery.balance() == 0
+
+
+def test_events_emited():
+    if network.show_active() in LOCAL_BLOCKCHAIN_ENVIRONMENTS:
+        pytest.skip()
+    # TODO: Add a test for async callback on rinkeby
+    pass

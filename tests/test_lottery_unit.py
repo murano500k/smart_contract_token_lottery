@@ -1,8 +1,10 @@
+from time import sleep
 from scripts.helpful_scripts import (
     LOCAL_BLOCKCHAIN_ENVIRONMENTS,
     get_account,
     fund_with_link,
     get_contract,
+    listen_for_end_lottery_event,
 )
 from brownie import ArtemLottery, accounts, config, network, exceptions
 from scripts.deploy_lottery import deploy_lottery
