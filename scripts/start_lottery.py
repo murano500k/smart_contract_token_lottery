@@ -1,14 +1,7 @@
 from typing import List
 from web3.main import Web3
-from scripts.helpful_scripts import (
-    get_account,
-    get_contract,
-    fund_with_link,
-    listen_for_end_lottery_event,
-)
-from brownie import ArtemLottery, network, config
-import time
-from web3 import Web3
+from scripts.helpful_scripts import get_account
+from brownie import ArtemLottery
 
 
 def start_lottery():

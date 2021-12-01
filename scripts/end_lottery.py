@@ -23,9 +23,5 @@ def end_lottery():
 
 def main():
     lottery = ArtemLottery[-1]
-    # if not lottery:
-    #     lottery = deploy_lottery()
-    # lottery = deploy_lottery()
-    # start_lottery()
     end_lottery()
     listen_for_end_lottery_event(lottery)
