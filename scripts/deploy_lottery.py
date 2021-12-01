@@ -12,6 +12,7 @@ from web3 import Web3
 
 
 DEFAULT_ENTRANCE_FEE_USD = Web3.toWei(10, "ether")
+DEFAULT_LOTTERY_LENGTH_IN_SECONDS = 60 * 2
 
 
 def deploy_lottery():
@@ -23,6 +24,7 @@ def deploy_lottery():
         config["networks"][network.show_active()]["fee"],
         config["networks"][network.show_active()]["keyhash"],
         DEFAULT_ENTRANCE_FEE_USD,
+        DEFAULT_LOTTERY_LENGTH_IN_SECONDS,
         {"from": account},
         publish_source=config["networks"][network.show_active()].get("verify", False),
     )
@@ -54,7 +56,7 @@ def end_lottery():
     # then end the lottery
     tx = fund_with_link(lottery.address)
     tx.wait(1)
-    ending_transaction = lottery.endLottery({"from": account})
+    ending_transaction = lottery.endLottery(False, {"from": account})
     ending_transaction.wait(1)
     print("endlottery requested")
 
@@ -62,8 +64,9 @@ def end_lottery():
 def main():
     # lottery = ArtemLottery[-1]
     # if not lottery:
+    #     lottery = deploy_lottery()
     lottery = deploy_lottery()
-    start_lottery()
-    enter_lottery()
-    end_lottery()
-    listen_for_end_lottery_event(lottery)
+    # start_lottery()
+    # enter_lottery()
+    # end_lottery()
+    # listen_for_end_lottery_event(lottery)

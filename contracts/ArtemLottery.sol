@@ -4,8 +4,9 @@ pragma solidity ^0.8.0;
 import "@chainlink/contracts/src/v0.8/VRFConsumerBase.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
+import "@chainlink/contracts/src/v0.8/interfaces/KeeperCompatibleInterface.sol";
 
-contract ArtemLottery is VRFConsumerBase, Ownable {
+contract ArtemLottery is VRFConsumerBase, Ownable, KeeperCompatibleInterface {
     address payable[] public players;
     address payable public recentWinner;
     uint256 public randomness;
@@ -30,6 +31,13 @@ contract ArtemLottery is VRFConsumerBase, Ownable {
     // 0
     // 1
     // 2
+    /**
+     * Use an interval in seconds and a timestamp to slow execution of Upkeep
+     */
+    uint256 public immutable lotteryDurationInSeconds;
+    uint256 public lastTimeStamp;
+    uint256 public lotteryCounter;
+    bool public shouldRestart;
 
     constructor(
         address _priceFeedAddress,
@@ -37,13 +45,18 @@ contract ArtemLottery is VRFConsumerBase, Ownable {
         address _link,
         uint256 _fee,
         bytes32 _keyhash,
-        uint256 _usdEntryFee
+        uint256 _usdEntryFee,
+        uint256 _lotteryDurationInSeconds
     ) public VRFConsumerBase(_vrfCoordinator, _link) {
         usdEntryFee = _usdEntryFee;
         ethUsdPriceFeed = AggregatorV3Interface(_priceFeedAddress);
         lottery_state = LOTTERY_STATE.CLOSED;
         fee = _fee;
         keyhash = _keyhash;
+        lotteryDurationInSeconds = _lotteryDurationInSeconds;
+        lastTimeStamp = block.timestamp;
+        lotteryCounter = 0;
+        shouldRestart = false;
     }
 
     function enter() public payable {
@@ -83,9 +96,10 @@ contract ArtemLottery is VRFConsumerBase, Ownable {
             "Can't start a new lottery yet!"
         );
         lottery_state = LOTTERY_STATE.OPEN;
+        lastTimeStamp = block.timestamp;
     }
 
-    function endLottery() public onlyOwner {
+    function endLottery(bool _shouldRestart) public onlyOwner {
         // uint256(
         //     keccack256(
         //         abi.encodePacked(
@@ -99,6 +113,7 @@ contract ArtemLottery is VRFConsumerBase, Ownable {
         lottery_state = LOTTERY_STATE.CALCULATING_WINNER;
         bytes32 requestId = requestRandomness(keyhash, fee);
         emit RequestedRandomness(requestId);
+        shouldRestart = _shouldRestart;
     }
 
     function fulfillRandomness(bytes32 _requestId, uint256 _randomness)
@@ -109,7 +124,7 @@ contract ArtemLottery is VRFConsumerBase, Ownable {
             lottery_state == LOTTERY_STATE.CALCULATING_WINNER,
             "You aren't there yet!"
         );
-        require(_randomness > 0, "random-not-found");
+        require(_randomness > 0, "random not found");
         uint256 indexOfWinner = _randomness % players.length;
         recentWinner = players[indexOfWinner];
         emit LotteryEnded(_requestId, recentWinner, randomness);
@@ -118,5 +133,46 @@ contract ArtemLottery is VRFConsumerBase, Ownable {
         players = new address payable[](0);
         lottery_state = LOTTERY_STATE.CLOSED;
         randomness = _randomness;
+        if (shouldRestart) {
+            shouldRestart = false;
+            startLottery();
+        }
+    }
+
+    function endLotterySinglePlayer() internal {
+        randomness = 0; // First and the only one player is a winner
+        lottery_state = LOTTERY_STATE.CALCULATING_WINNER;
+        shouldRestart = true;
+        uint256 indexOfWinner = randomness;
+        recentWinner = players[indexOfWinner];
+        emit LotteryEnded(0, recentWinner, randomness);
+        recentWinner.transfer(address(this).balance);
+        // Reset
+        players = new address payable[](0);
+        lottery_state = LOTTERY_STATE.CLOSED;
+        if (shouldRestart) {
+            shouldRestart = false;
+            startLottery();
+        }
+    }
+
+    function checkUpkeep(bytes calldata checkData)
+        external
+        override
+        returns (bool upkeepNeeded, bytes memory performData)
+    {
+        upkeepNeeded =
+            (lottery_state == LOTTERY_STATE.OPEN) &&
+            ((block.timestamp - lastTimeStamp) > lotteryDurationInSeconds);
+    }
+
+    function performUpkeep(bytes calldata performData) external override {
+        if (players.length == 1) {
+            endLotterySinglePlayer();
+        } else if (players.length > 1) {
+            endLottery(false);
+        }
+        lotteryCounter = lotteryCounter + 1;
+        lastTimeStamp = block.timestamp;
     }
 }
