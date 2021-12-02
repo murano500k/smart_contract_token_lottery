@@ -11,6 +11,10 @@ from scripts.deploy_lottery import deploy_lottery
 from web3 import Web3
 import pytest
 
+from web3.auto import w3
+from threading import Thread
+import time
+
 
 def test_get_latest_price():
     if network.show_active() not in LOCAL_BLOCKCHAIN_ENVIRONMENTS:
@@ -77,8 +81,9 @@ def test_can_end_lottery():
     account = get_account()
     lottery.startLottery({"from": account})
     lottery.enter({"from": account, "value": lottery.getEntranceFee()})
+    lottery.enter({"from": account, "value": lottery.getEntranceFee()})
     fund_with_link(lottery)
-    lottery.endLottery({"from": account})
+    lottery.endLottery(False, {"from": account})
     assert lottery.lottery_state() == 2
 
 
@@ -95,7 +100,7 @@ def test_can_pick_winner_correctly():
     fund_with_link(lottery)
     starting_balance_of_account = account.balance()
     balance_of_lottery = lottery.balance()
-    transaction = lottery.endLottery({"from": account})
+    transaction = lottery.endLottery(False, {"from": account})
     request_id = transaction.events["RequestedRandomness"]["requestId"]
     STATIC_RNG = 777
     get_contract("vrf_coordinator").callBackWithRandomness(
