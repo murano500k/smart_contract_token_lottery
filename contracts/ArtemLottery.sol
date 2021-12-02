@@ -100,23 +100,10 @@ contract ArtemLottery is VRFConsumerBase, Ownable, KeeperCompatibleInterface {
     }
 
     function endLottery(bool _shouldRestart) public onlyOwner {
-        // uint256(
-        //     keccack256(
-        //         abi.encodePacked(
-        //             nonce, // nonce is preditable (aka, transaction number)
-        //             msg.sender, // msg.sender is predictable
-        //             block.difficulty, // can actually be manipulated by the miners!
-        //             block.timestamp // timestamp is predictable
-        //         )
-        //     )
-        // ) % players.length;
-        lottery_state = LOTTERY_STATE.CALCULATING_WINNER;
-        bytes32 requestId = requestRandomness(keyhash, fee);
-        emit RequestedRandomness(requestId);
-        shouldRestart = _shouldRestart;
+        endLotteryInternal(_shouldRestart);
     }
 
-    function endLotteryByKeeper(bool _shouldRestart) internal {
+    function endLotteryInternal(bool _shouldRestart) internal {
         lottery_state = LOTTERY_STATE.CALCULATING_WINNER;
         bytes32 requestId = requestRandomness(keyhash, fee);
         emit RequestedRandomness(requestId);
@@ -146,23 +133,6 @@ contract ArtemLottery is VRFConsumerBase, Ownable, KeeperCompatibleInterface {
         }
     }
 
-    function endLotterySinglePlayer() internal {
-        randomness = 0; // First and the only one player is a winner
-        lottery_state = LOTTERY_STATE.CALCULATING_WINNER;
-        shouldRestart = true;
-        uint256 indexOfWinner = randomness;
-        recentWinner = players[indexOfWinner];
-        emit LotteryEnded(0, recentWinner, randomness);
-        recentWinner.transfer(address(this).balance);
-        // Reset
-        players = new address payable[](0);
-        lottery_state = LOTTERY_STATE.CLOSED;
-        if (shouldRestart) {
-            shouldRestart = false;
-            startLottery();
-        }
-    }
-
     function checkUpkeep(bytes calldata checkData)
         external
         override
@@ -177,7 +147,6 @@ contract ArtemLottery is VRFConsumerBase, Ownable, KeeperCompatibleInterface {
     function performUpkeep(bytes calldata performData) external override {
         lastTimeStamp = block.timestamp;
         lotteryCounter = lotteryCounter + 1;
-        endLotteryByKeeper(false);
+        endLotteryInternal(false);
     }
-
 }
