@@ -126,6 +126,7 @@ contract ArtemLottery is VRFConsumerBase, Ownable, KeeperCompatibleInterface {
         // Reset
         players = new address payable[](0);
         lottery_state = LOTTERY_STATE.CLOSED;
+        lotteryCounter = lotteryCounter + 1;
         randomness = _randomness;
         if (shouldRestart) {
             shouldRestart = false;
@@ -146,7 +147,6 @@ contract ArtemLottery is VRFConsumerBase, Ownable, KeeperCompatibleInterface {
 
     function performUpkeep(bytes calldata performData) external override {
         lastTimeStamp = block.timestamp;
-        lotteryCounter = lotteryCounter + 1;
         endLotteryInternal(false);
     }
 }
