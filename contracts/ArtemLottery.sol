@@ -105,9 +105,15 @@ contract ArtemLottery is VRFConsumerBase, Ownable, KeeperCompatibleInterface {
 
     function endLotteryInternal(bool _shouldRestart) internal {
         lottery_state = LOTTERY_STATE.CALCULATING_WINNER;
-        bytes32 requestId = requestRandomness(keyhash, fee);
+        bytes32 requestId = 0;
+        if (players.length > 1) {
+            requestId = requestRandomness(keyhash, fee);
+        }
         emit RequestedRandomness(requestId);
         shouldRestart = _shouldRestart;
+        if (players.length <= 1) {
+            fulfillRandomness(requestId, 1);
+        }
     }
 
     function fulfillRandomness(bytes32 _requestId, uint256 _randomness)

@@ -1,4 +1,4 @@
-from brownie import network
+from brownie import network, ArtemLottery
 import pytest
 from scripts.helpful_scripts import (
     LOCAL_BLOCKCHAIN_ENVIRONMENTS,
@@ -18,9 +18,24 @@ def test_can_pick_winner():
     lottery.enter({"from": account, "value": lottery.getEntranceFee()})
     lottery.enter({"from": account, "value": lottery.getEntranceFee()})
     fund_with_link(lottery)
-    lottery.endLottery({"from": account})
+    lottery.endLottery(False, {"from": account})
 
     time.sleep(200)
+    assert lottery.recentWinner() == account
+    assert lottery.balance() == 0
+
+
+def test_lottery_finished_single_player():
+    if network.show_active() in LOCAL_BLOCKCHAIN_ENVIRONMENTS:
+        pytest.skip()
+    # lottery = deploy_lottery()
+    lottery = ArtemLottery[-1]
+    account = get_account()
+    lottery.startLottery({"from": account})
+    lottery.enter({"from": account, "value": lottery.getEntranceFee()})
+    lottery.endLottery(False, {"from": account})
+
+    time.sleep(20)
     assert lottery.recentWinner() == account
     assert lottery.balance() == 0
 
