@@ -37,6 +37,6 @@ export const Main = () => {
     let stringChainId = String(chainId)
 
     return (<>
-        <h2 className={classes.title}>Artem SmartContract Lottery</h2>
+        <h2 className={classes.title}>Artem SmartContract Lottery {networkName}</h2>
     </>)
 }

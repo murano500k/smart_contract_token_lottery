@@ -1,5 +1,6 @@
 import { Button, makeStyles } from "@material-ui/core"
-import { useEthers } from "@usedapp/core"
+import { useEthers, useEtherBalance } from "@usedapp/core"
+import { formatEther } from '@ethersproject/units'
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -15,11 +16,15 @@ export const Header = () => {
     const classes = useStyles()
 
     const { account, activateBrowserWallet, deactivate } = useEthers()
+    const etherBalance = useEtherBalance(account)
+
 
     const isConnected = account !== undefined
 
     return (
         <div className={classes.container}>
+            {account && <p>Account: {account}</p>}
+            {etherBalance && <p>Balance: {formatEther(etherBalance)}</p>}
             {isConnected ? (
                 <Button variant="contained" onClick={deactivate}>
                     Disconnect
@@ -33,6 +38,7 @@ export const Header = () => {
                     Connect
                 </Button>
             )}
+
         </div>
     )
 }
