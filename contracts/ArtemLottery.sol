@@ -7,6 +7,8 @@ import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/KeeperCompatibleInterface.sol";
 
 contract ArtemLottery is VRFConsumerBase, Ownable, KeeperCompatibleInterface {
+    bool constant AUTO_RESTART_KEEPER = false;
+    bool constant START_ON_DEPLOY = false;
     address payable[] public players;
     address payable public recentWinner;
     uint256 public randomness;
@@ -56,7 +58,7 @@ contract ArtemLottery is VRFConsumerBase, Ownable, KeeperCompatibleInterface {
         lotteryDurationInSeconds = duration;
         lastTimeStamp = block.timestamp;
         lotteryCounter = 0;
-        shouldRestart = false;
+        shouldRestart = START_ON_DEPLOY;
     }
 
     function enter() public payable {
@@ -132,6 +134,7 @@ contract ArtemLottery is VRFConsumerBase, Ownable, KeeperCompatibleInterface {
         // Reset
         players = new address payable[](0);
         lottery_state = LOTTERY_STATE.CLOSED;
+        lastTimeStamp = block.timestamp;
         lotteryCounter = lotteryCounter + 1;
         randomness = _randomness;
         if (shouldRestart) {
@@ -152,8 +155,7 @@ contract ArtemLottery is VRFConsumerBase, Ownable, KeeperCompatibleInterface {
     }
 
     function performUpkeep(bytes calldata performData) external override {
-        lastTimeStamp = block.timestamp;
-        endLotteryInternal(false);
+        endLotteryInternal(AUTO_RESTART_KEEPER);
     }
 
     function getBalance() public view returns (uint256) {
