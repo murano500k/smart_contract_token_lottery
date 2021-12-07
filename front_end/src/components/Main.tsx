@@ -10,6 +10,7 @@ import eth from "../eth.png"
 import dai from "../dai.png"
 import { makeStyles } from "@material-ui/core"
 import { LotteryState } from "./LotteryState"
+import { EnterLottery } from "./EnterLottery"
 
 export type Token = {
     image: string
@@ -33,5 +34,6 @@ export const Main = () => {
     return (<>
         <h2 className={classes.title}>Artem SmartContract Lottery {networkName}</h2>
         <LotteryState />
+        <EnterLottery/>
     </>)
 }
