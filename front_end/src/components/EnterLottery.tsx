@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { makeStyles, Button, Input, CircularProgress, Snackbar } from "@material-ui/core"
-import { useEnterLottery, useEntranceFee } from "../hooks"
+import { useEnterLottery, useEntranceFee, useEntranceFeeUSD } from "../hooks"
+import { formatUnits } from "@ethersproject/units"
 
 
 
@@ -21,6 +22,7 @@ export const EnterLottery = () => {
         useEnterLottery()
 
     const entranceFee = useEntranceFee()
+    const entranceFeeUsd = useEntranceFeeUSD()
 
     const handleEnterLottery = () => {
         return enterLotterySend({ value: entranceFee })
@@ -39,7 +41,7 @@ export const EnterLottery = () => {
                 disabled={isMining}>
                 {isMining ? <CircularProgress size={26} /> : "Enter lottery"}
             </Button>
-            <div>{entranceFee ? entranceFee.toNumber() : -1}</div>
+            <div className={classes.text}>{entranceFee ? formatUnits(entranceFee, 18) : -1}ETH or {entranceFeeUsd}$</div>
 
         </>)
 }

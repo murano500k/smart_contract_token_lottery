@@ -5,17 +5,21 @@ import networkMapping from "../chain-info/deployments/map.json"
 import { formatUnits } from "@ethersproject/units"
 
 
-export const useEntranceFee = (): BigNumber | undefined => {
+export const useEntranceFeeUSD = (): number => {
     const { chainId } = useEthers()
     const { abi } = ArtemLottery
     const artemLotteryAddress = chainId ? networkMapping[String(chainId)]["ArtemLottery"][0] : constants.AddressZero
     const artemLotteryInterface = new utils.Interface(abi)
-    const [entranceFee]: any = useContractCall({
+    const [entranceFeeUsd]: any = useContractCall({
         abi: artemLotteryInterface,
         address: artemLotteryAddress,
-        method: "getEntranceFee",
+        method: "usdEntryFee",
         args: [],
     }) ?? []
 
-    return entranceFee;
+    const formatted = entranceFeeUsd
+        ? parseFloat(formatUnits(entranceFeeUsd, 18))
+        : -1
+
+    return formatted;
 }

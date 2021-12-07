@@ -1,5 +1,6 @@
 import { useLotteryState, useLotteryBalance, useLotteryTimeStamp, useLotteryCounter, useRecentWinner } from "../hooks"
 import { makeStyles } from "@material-ui/core"
+import { useLotteryDuration } from "../hooks/useLotteryDuration"
 
 
 
@@ -23,6 +24,7 @@ export const LotteryState = () => {
     const counter = useLotteryCounter()
     const timestamp = useLotteryTimeStamp()
     const recentWinner = useRecentWinner()
+    const lotteryDuration = useLotteryDuration()
     return (
         <>
             <h2 className={classes.subtitle}> Lottery is {lotteryState} now</h2>
@@ -30,6 +32,7 @@ export const LotteryState = () => {
             <h2 className={classes.subtitle}> Recent winner is {recentWinner}</h2>
             <h2 className={classes.subtitle}> Lottery counter is {counter ? counter.toNumber() : -10}</h2>
             <h2 className={classes.subtitle}> last updated {timestamp}</h2>
+            <h2 className={classes.subtitle}> Lottery duration is {lotteryDuration?.toNumber()} seconds</h2>
 
         </>)
 }
