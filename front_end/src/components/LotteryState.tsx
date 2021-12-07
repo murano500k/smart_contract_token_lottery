@@ -28,7 +28,7 @@ export const LotteryState = () => {
             <h2 className={classes.title}> formattedBalance = {formattedBalance}</h2>
             <h2 className={classes.title}> balance = {balance ? balance.toNumber() : -10}</h2>
             <h2 className={classes.title}> counter = {counter ? counter.toNumber() : -10}</h2>
-            <h2 className={classes.title}> timestamp = {timestamp ? timestamp.toNumber() : -10}</h2>
+            <h2 className={classes.title}> lastTimeStamp = {timestamp}</h2>
 
         </>)
 }
