@@ -155,4 +155,8 @@ contract ArtemLottery is VRFConsumerBase, Ownable, KeeperCompatibleInterface {
         lastTimeStamp = block.timestamp;
         endLotteryInternal(false);
     }
+
+    function getBalance() public view returns (uint256) {
+        return address(this).balance;
+    }
 }

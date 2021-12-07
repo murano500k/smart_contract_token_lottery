@@ -4,7 +4,7 @@ import ArtemLottery from "../chain-info/contracts/ArtemLottery.json"
 import networkMapping from "../chain-info/deployments/map.json"
 
 
-export const useLotteryState = (): BigNumber | undefined => {
+export const useLotteryState = (): number | undefined => {
     const { chainId } = useEthers()
     const { abi } = ArtemLottery
     const artemLotteryAddress = chainId ? networkMapping[String(chainId)]["ArtemLottery"][0] : constants.AddressZero

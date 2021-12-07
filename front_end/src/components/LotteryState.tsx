@@ -24,11 +24,11 @@ export const LotteryState = () => {
     const timestamp = useLotteryTimeStamp()
     return (
         <>
-            <h2 className={classes.title}> lottery_state = {lotteryState ? lotteryState._hex : -10}</h2>
+            <h2 className={classes.title}> lottery_state = {lotteryState}</h2>
             <h2 className={classes.title}> formattedBalance = {formattedBalance}</h2>
-            <h2 className={classes.title}> balance = {balance?._hex}</h2>
-            <h2 className={classes.title}> counter = {counter ? counter._hex : -10}</h2>
-            <h2 className={classes.title}> timestamp = {timestamp ? timestamp._hex : -10}</h2>
+            <h2 className={classes.title}> balance = {balance ? balance.toNumber() : -10}</h2>
+            <h2 className={classes.title}> counter = {counter ? counter.toNumber() : -10}</h2>
+            <h2 className={classes.title}> timestamp = {timestamp ? timestamp.toNumber() : -10}</h2>
 
         </>)
 }

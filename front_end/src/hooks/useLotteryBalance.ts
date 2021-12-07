@@ -7,13 +7,13 @@ export const useLotteryBalance = (): BigNumber | undefined => {
     const { chainId } = useEthers()
     const { abi } = ArtemLottery
     const artemLotteryAddress = chainId ? networkMapping[String(chainId)]["ArtemLottery"][0] : constants.AddressZero;
-    const artemLotteryInterface = new utils.Interface(abi);
+    const artemLotteryInterface = new utils.Interface(abi)
     const [balance]: any = useContractCall({
         abi: artemLotteryInterface,
         address: artemLotteryAddress,
-        method: "balance",
+        method: "getBalance",
         args: [],
-    }) ?? [];
+    }) ?? []
 
     return balance
 }
