@@ -136,3 +136,4 @@ dmypy.json
 
 
 temp
+front_end/src/chain-info/*
