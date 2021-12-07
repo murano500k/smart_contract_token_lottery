@@ -23,6 +23,15 @@ const useStyles = makeStyles((theme) => ({
         color: theme.palette.common.white,
         textAlign: "center",
         padding: theme.spacing(4)
+    },
+    subtitle: {
+        color: theme.palette.common.white,
+        textAlign: "center",
+        padding: theme.spacing(1)
+    },
+    text: {
+        color: theme.palette.common.white,
+        textAlign: "center",
     }
 }))
 
@@ -30,10 +39,12 @@ export const Main = () => {
     const classes = useStyles()
     const { chainId, error } = useEthers()
     const networkName = chainId ? helperConfig[chainId] : "dev"
+    const artemLotteryAddress = chainId ? networkMapping[String(chainId)]["ArtemLottery"][0] : constants.AddressZero
 
     return (<>
         <h2 className={classes.title}>Artem SmartContract Lottery {networkName}</h2>
+        <div className={classes.text}>Lottery contract address: {artemLotteryAddress}</div>
         <LotteryState />
-        <EnterLottery/>
+        <EnterLottery />
     </>)
 }
