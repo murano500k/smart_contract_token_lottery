@@ -1,7 +1,8 @@
-import { useLotteryState, useLotteryBalance, useLotteryTimeStamp, useLotteryCounter, useRecentWinner } from "../hooks"
+import { useLotteryState, useLotteryBalance, useLotteryTimeStamp, useLotteryCounter, useRecentWinner, usePlayers } from "../hooks"
 import { makeStyles } from "@material-ui/core"
 import { useLotteryDuration } from "../hooks/useLotteryDuration"
 import { BigNumber } from "@ethersproject/bignumber"
+import { usePlayersCount } from "../hooks/usePlayersCount"
 
 
 
@@ -27,6 +28,8 @@ export const LotteryState = () => {
     const timstampForHumans = lastTimeStamp ? time_ago(new Date(lastTimeStamp * 1000).toString()) : "No data"
     const recentWinner = useRecentWinner()
     const lotteryDuration = useLotteryDuration()
+    const playersCount = usePlayersCount()
+    const players = usePlayers(playersCount)
 
     console.log("lastTimestamp=" + lastTimeStamp);
 
@@ -48,6 +51,7 @@ export const LotteryState = () => {
             <h2 className={classes.subtitle}> Lottery counter is {counter ? counter.toNumber() : -10}</h2>
             <h2 className={classes.subtitle}> last updated {timstampForHumans}</h2>
             <h2 className={classes.subtitle}> Lottery duration is {lotteryDuration} seconds</h2>
+            <h2 className={classes.subtitle}> Lottery players ({playersCount}): {players} </h2>
 
         </>)
 }

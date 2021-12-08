@@ -161,4 +161,8 @@ contract ArtemLottery is VRFConsumerBase, Ownable, KeeperCompatibleInterface {
     function getBalance() public view returns (uint256) {
         return address(this).balance;
     }
+
+    function getPlayersCount() public view returns (uint256) {
+        return players.length;
+    }
 }
