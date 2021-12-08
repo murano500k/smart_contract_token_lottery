@@ -41,7 +41,7 @@ export const EnterLottery = () => {
                 disabled={isMining}>
                 {isMining ? <CircularProgress size={26} /> : "Enter lottery"}
             </Button>
-            <div className={classes.text}>{entranceFee ? formatUnits(entranceFee, 18) : -1}ETH or {entranceFeeUsd}$</div>
+            <div className={classes.text}>{entranceFeeUsd}$ or {entranceFee ? formatUnits(entranceFee, 18) : -1}ETH</div>
 
         </>)
 }
