@@ -3,7 +3,7 @@ import { constants, utils, BigNumber } from "ethers"
 import ArtemLottery from "../chain-info/contracts/ArtemLottery.json"
 import networkMapping from "../chain-info/deployments/map.json"
 
-export const useLotteryDuration = (): BigNumber | undefined => {
+export const useLotteryDuration = (): number => {
     const { chainId } = useEthers()
     const { abi } = ArtemLottery
     const artemLotteryAddress = chainId ? networkMapping[String(chainId)]["ArtemLottery"][0] : constants.AddressZero
@@ -15,5 +15,7 @@ export const useLotteryDuration = (): BigNumber | undefined => {
         args: [],
     }) ?? []
 
-    return lotteryDurationInSeconds;
+    const duration = lotteryDurationInSeconds ? lotteryDurationInSeconds.toNumber() : 0
+
+    return duration;
 }
