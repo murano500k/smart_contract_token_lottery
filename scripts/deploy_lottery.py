@@ -4,7 +4,6 @@ from scripts.helpful_scripts import (
     get_account,
     get_contract,
     fund_with_link,
-    listen_for_end_lottery_event,
 )
 from brownie import ArtemLottery, network, config
 import time
@@ -16,7 +15,7 @@ import shutil
 
 
 DEFAULT_ENTRANCE_FEE_USD = Web3.toWei(10, "ether")
-DEFAULT_LOTTERY_LENGTH_IN_SECONDS = 60 * 2
+DEFAULT_LOTTERY_LENGTH_IN_SECONDS = 60 * 60 * 24  # 24 hours
 
 
 def deploy_lottery(front_end_update=False):
@@ -86,11 +85,4 @@ def copy_folders_to_front_end(src, dest):
 
 
 def main():
-    # lottery = ArtemLottery[-1]
-    # if not lottery:
-    #     lottery = deploy_lottery()
     lottery = deploy_lottery(front_end_update=True)
-    # start_lottery()
-    # enter_lottery()
-    # end_lottery()
-    # listen_for_end_lottery_event(lottery)
