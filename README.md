@@ -1,13 +1,3 @@
-- [Smart contract lottery](#Smart contract lottery)
-  - [Summary](#summary)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-- [Useage](#useage)
-  - [Scripts](#scripts)
-  - [Front end](#front-end)
-  - [Testing](#testing)
-- [License](#license)
-
 # Smart contract lottery
 <br/>
 <p align="center">
