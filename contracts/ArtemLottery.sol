@@ -7,8 +7,8 @@ import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/KeeperCompatibleInterface.sol";
 
 contract ArtemLottery is VRFConsumerBase, Ownable, KeeperCompatibleInterface {
-    bool constant AUTO_RESTART_KEEPER = false;
-    bool constant START_ON_DEPLOY = false;
+    bool constant AUTO_RESTART_KEEPER = true;
+    bool constant START_ON_DEPLOY = true;
     address payable[] public players;
     address payable public recentWinner;
     uint256 public randomness;
