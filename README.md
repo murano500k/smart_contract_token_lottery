@@ -1,4 +1,14 @@
-# smart_contract_token_lottery
+- [Smart contract lottery](#Smart contract lottery)
+  - [Summary](#summary)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+- [Useage](#useage)
+  - [Scripts](#scripts)
+  - [Front end](#front-end)
+  - [Testing](#testing)
+- [License](#license)
+
+# Smart contract lottery
 <br/>
 <p align="center">
 <img src="./lottery-web.png" width="500" alt="Artem Lottery">
@@ -7,7 +17,7 @@
 <br/>
 
 ## Summary 
-This repo is a decentralized lottery project based on solidity smart contract and front-end for user interaction.
+This repo is a decentralized lottery project based on Solidity smart contract and front-end for user interaction.
 Lottery is started and ended automatically, default lottery duration is 24 hours.
 User is allowed to participate the lottery with entry fee (10$ worth of eth).
 When lottery is ended random winner is selected. The winner takes the entire pot.
@@ -22,16 +32,6 @@ Lottery contract should be funded with LINK token to work with Chainlink VRF.
 Lottery contract should be registered on https://keepers.chain.link/ and funded with LINK token for keeper to work properly.
 
 Only Kovan test network is supported now.
-
-- [smart_contract_token_lottery](#smart_contract_token_lottery)
-  - [Summary](#summary)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-- [Useage](#useage)
-  - [Scripts](#scripts)
-  - [Front end](#front-end)
-  - [Testing](#testing)
-- [License](#license)
 
 ## Prerequisites
 
